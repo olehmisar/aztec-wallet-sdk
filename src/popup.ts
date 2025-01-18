@@ -24,7 +24,7 @@ export class PopupWalletSdk implements TypedEip1193Provider {
   #pendingRequestsCount = 0;
 
   readonly #connectedAccountCompleteAddress = persisted<string | null>(
-    "shield-wallet-connected-complete-address",
+    "aztec-wallet-connected-complete-address",
     null,
   );
   readonly #account = writable<Eip1193Account | undefined>(undefined);
@@ -42,13 +42,20 @@ export class PopupWalletSdk implements TypedEip1193Provider {
        */
       fallbackOpenPopup?: FallbackOpenPopup;
       walletUrl?: string;
+      externalIframe?: HTMLIFrameElement;
     } = {},
   ) {
     this.#pxe = resolvePxe(pxe);
     this.walletUrl = params.walletUrl ?? DEFAULT_WALLET_URL;
     this.#communicator = new Communicator({
-      url: joinURL(this.walletUrl, "/sign"),
-      ...params,
+      popupParams: {
+        url: joinURL(this.walletUrl, "/sign"),
+        fallbackOpenPopup: params.fallbackOpenPopup,
+      },
+      iframeParams: {
+        url: joinURL(this.walletUrl, "/data"),
+        element: params.externalIframe,
+      },
     });
 
     let accountId = 0;
@@ -75,7 +82,6 @@ export class PopupWalletSdk implements TypedEip1193Provider {
       this.#account.set(account);
     });
   }
-
   getAccount() {
     return get(this.#account);
   }
@@ -99,6 +105,7 @@ export class PopupWalletSdk implements TypedEip1193Provider {
 
   async disconnect() {
     this.#connectedAccountCompleteAddress.set(null);
+    this.#communicator.disconnect("both");
   }
 
   /**
@@ -143,7 +150,7 @@ export class PopupWalletSdk implements TypedEip1193Provider {
 
       const disconnectIfNoPendingRequests = () => {
         if (this.#pendingRequestsCount <= 0) {
-          this.#communicator.disconnect();
+          this.#communicator.disconnect("popup");
         }
       };
 

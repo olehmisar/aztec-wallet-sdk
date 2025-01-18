@@ -21,3 +21,46 @@ const wallet = new PopupWalletSdk(pxe);
 const account = await wallet.getAccount();
 const token = await Token.at(address, account);
 ```
+
+## Example
+
+App.tsx
+
+```tsx
+import { YourComponent } from "./YourComponent";
+import { WalletProvider } from "@shieldswap/wallet-sdk/react";
+
+export const PXE_URL = "http://localhost:8080"; // change it to your pxe url
+export const WALLET_URL = "http://localhost:5173"; // change it to your wallet url
+
+const App = () => {
+  return (
+    <>
+      <WalletProvider pxeUrl={PXE_URL} walletUrl={WALLET_URL}>
+        <YourComponent />
+      </WalletProvider>
+    </>
+  );
+};
+
+export default App;
+```
+
+YourComponent.tsx
+
+```tsx
+import { useWalletContext } from "@shieldswap/wallet-sdk/react";
+
+const YourComponent = () => {
+  const { account, sdk } = useWalletContext();
+
+  return (
+    <div>
+      <p>Your Component</p>
+      <button onClick={() => sdk?.connect()}>Connect</button>
+    </div>
+  );
+};
+
+export default YourComponent;
+```

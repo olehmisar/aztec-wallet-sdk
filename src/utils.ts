@@ -14,6 +14,7 @@ export const CAIP = {
 };
 
 export const DEFAULT_WALLET_URL = "https://obsidion.vercel.app";
+export const DEFAULT_PXE_URL = "https://pxe.obsidion.xyz";
 
 export const METHODS_NOT_REQUIRING_CONFIRMATION: (keyof RpcRequestMap)[] = [
   "aztec_accounts",

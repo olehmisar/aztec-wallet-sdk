@@ -1,1 +1,6 @@
 dist
+node_modules
+.DS_Store
+
+# because this repo is a mirror
+pnpm-lock.yaml

@@ -50,14 +50,14 @@
     "vitest": "^1.1.1"
   },
   "dependencies": {
-    "@aztec/aztec.js": "catalog:",
-    "@aztec/circuit-types": "catalog:",
-    "@aztec/circuits.js": "catalog:",
-    "@aztec/foundation": "catalog:",
+    "@aztec/aztec.js": "0.67.0",
+    "@aztec/circuit-types": "0.67.0",
+    "@aztec/circuits.js": "0.67.0",
+    "@aztec/foundation": "0.67.0",
     "@walletconnect/modal-sign-html": "^2.6.2",
     "@walletconnect/utils": "^2.11.2",
     "ox": "^0.6.5",
-    "svelte": "catalog:",
+    "svelte": "^5.17.4",
     "svelte-persisted-store": "^0.11.0",
     "ts-essentials": "^9.4.1",
     "ufo": "^1.5.4"

@@ -1,17 +1,2 @@
-import { useEffect, useState } from "react";
-import type { PopupWalletSdk } from "../popup.js";
-import type { ReownWalletSdk } from "../reown.js";
-import type { Eip1193Account } from "./eip1193.js";
-
-export function useAccount(wallet: PopupWalletSdk | ReownWalletSdk) {
-  const [account, setAccount] = useState<Eip1193Account | undefined>(undefined);
-
-  useEffect(() => {
-    const unsubscribe = wallet.accountObservable.subscribe((account) => {
-      setAccount(account);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  return account;
-}
+export * from "../react/useWallet.js";
+export * from "../react/WalletProvider.js";
