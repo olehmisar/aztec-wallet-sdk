@@ -12,8 +12,9 @@ import {
   FunctionSelector,
   type FunctionAbi,
 } from "@aztec/foundation/abi";
-import type { Eip1193Account } from "./exports/eip1193.js";
+import type { Eip1193Account, TransactionRequest } from "./exports/eip1193.js";
 import { serde } from "./serde.js";
+import { lazyValue } from "./utils.js";
 
 // TODO: consider changing the API to be more viem-like. I.e., use `contract.write.methodName` and `contract.read.methodName`
 export class ContractBase<T extends AztecContract> {
@@ -97,8 +98,6 @@ export class Contract<T extends AztecContract> extends ContractBase<T> {
       original,
     });
   }
-  /** @deprecated TODO: remove this alias */
-  static wrap = this.fromAztec.bind(this);
 }
 export namespace Contract {
   export type Infer<T extends { at: (...args: any[]) => any }> = Awaited<
@@ -107,27 +106,44 @@ export namespace Contract {
 }
 
 class ContractFunctionInteraction {
+  readonly #call: () => FunctionCall;
+  readonly #txRequest: () => Required<TransactionRequest>;
+
   constructor(
-    private address: AztecAddress,
+    address: AztecAddress,
     private account: Eip1193Account,
     private functionAbi: FunctionAbi,
-    private args: unknown[],
-    private options: SendOptions | undefined,
-  ) {}
-
-  send() {
-    return this.account.sendTransaction({
-      ...this.options,
-      calls: [this.request()],
+    args: unknown[],
+    options: SendOptions | undefined,
+  ) {
+    this.#call = lazyValue(() => {
+      return {
+        name: this.functionAbi.name,
+        args: encodeArguments(this.functionAbi, args),
+        selector: FunctionSelector.fromNameAndParameters(
+          this.functionAbi.name,
+          this.functionAbi.parameters,
+        ),
+        type: this.functionAbi.functionType,
+        to: address,
+        isStatic: this.functionAbi.isStatic,
+        returnTypes: this.functionAbi.returnTypes,
+      };
+    });
+    this.#txRequest = lazyValue(() => {
+      return {
+        calls: [this.#call()],
+        authWitnesses: options?.authWitnesses ?? [],
+      };
     });
   }
 
+  send() {
+    return this.account.sendTransaction(this.#txRequest());
+  }
+
   async simulate() {
-    const call = this.request();
-    const results = await this.account.simulateTransaction({
-      ...this.options,
-      calls: [call],
-    });
+    const results = await this.account.simulateTransaction(this.#txRequest());
     if (results.length !== 1) {
       throw new Error(`invalid results length: ${results.length}`);
     }
@@ -138,21 +154,8 @@ class ContractFunctionInteraction {
     );
   }
 
-  // TODO: convert to lazyValue
   request(): FunctionCall {
-    const encodedArgs = encodeArguments(this.functionAbi, this.args);
-    return {
-      name: this.functionAbi.name,
-      args: encodedArgs,
-      selector: FunctionSelector.fromNameAndParameters(
-        this.functionAbi.name,
-        this.functionAbi.parameters,
-      ),
-      type: this.functionAbi.functionType,
-      to: this.address,
-      isStatic: this.functionAbi.isStatic,
-      returnTypes: this.functionAbi.returnTypes,
-    };
+    return this.#call();
   }
 }
 
@@ -173,7 +176,6 @@ export class BatchCall
   }
 }
 
-// TODO: import from `@aztec/aztec.js` when it is exported (version 0.70.x)
 export type IntentAction = {
   caller: AztecAddress;
   action: FunctionCall;

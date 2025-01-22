@@ -1,25 +1,23 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "tsBuildInfoFile": ".tsbuildinfo",
-    "target": "es2020",
-    "lib": ["esnext", "dom", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
+    "target": "ES2022",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+
+    // compatibility
     "esModuleInterop": true,
-    "downlevelIteration": true,
-    "inlineSourceMap": true,
-    "declarationMap": true,
-    "importHelpers": true,
-    "resolveJsonModule": true,
-    "composite": true,
     "skipLibCheck": true,
-    "jsx": "react-jsx"
-  },
-  "include": ["src", "src/**/*.json"],
-  "exclude": ["node_modules", "trash"]
+    "verbatimModuleSyntax": true,
+
+    // lib
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+
+    // strictness
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true
+  }
 }

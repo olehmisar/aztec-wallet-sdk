@@ -5,9 +5,10 @@ import {
   TxHash,
   type AztecNode,
   type FunctionCall,
+  type PXE,
   type Wallet,
 } from "@aztec/aztec.js";
-import type { PXE, TxSimulationResult } from "@aztec/circuit-types";
+import type { TxSimulationResult } from "@aztec/circuit-types";
 import { GasSettings } from "@aztec/circuits.js";
 import {
   encodeArguments,
@@ -102,7 +103,7 @@ export class Eip1193Account {
   static fromAztecAccount = this.fromAztec.bind(this);
 }
 
-type TransactionRequest = {
+export type TransactionRequest = {
   calls: FunctionCall[];
   authWitnesses?: IntentAction[];
 };
