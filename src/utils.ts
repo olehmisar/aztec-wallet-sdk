@@ -17,6 +17,7 @@ export const DEFAULT_WALLET_URL = "https://obsidion.vercel.app";
 
 export const METHODS_NOT_REQUIRING_CONFIRMATION: (keyof RpcRequestMap)[] = [
   "aztec_accounts",
+  "aztec_call",
 ];
 
 export function lazyValue<T>(fn: () => T) {

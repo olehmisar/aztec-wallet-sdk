@@ -1,6 +1,6 @@
 {
   "name": "@shieldswap/wallet-sdk",
-  "version": "0.76.2",
+  "version": "0.76.1-obsidion.3",
   "type": "module",
   "main": "src/exports/index.ts",
   "module": "src/exports/index.ts",
@@ -50,11 +50,12 @@
     "vitest": "^1.1.1"
   },
   "dependencies": {
-    "@aztec/aztec.js": "0.76.2",
-    "@aztec/circuit-types": "0.76.2",
-    "@aztec/circuits.js": "0.76.2",
-    "@aztec/foundation": "0.76.2",
-    "@walletconnect/modal-sign-html": "^2.6.2",
+    "@aztec/aztec.js": "0.76.1",
+    "@aztec/circuit-types": "0.76.1",
+    "@aztec/circuits.js": "0.76.1",
+    "@aztec/foundation": "0.76.1",
+    "@walletconnect/modal-sign-html": "2.6.2",
+    "@walletconnect/universal-provider": "^2.18.0",
     "@walletconnect/utils": "^2.11.2",
     "ox": "^0.6.5",
     "svelte": "^5.17.3",
